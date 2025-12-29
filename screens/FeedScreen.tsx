@@ -63,7 +63,6 @@ const FeedScreen: React.FC = () => {
   const [commentText, setCommentText] = useState('');
   const [comments, setComments] = useState(INITIAL_COMMENTS);
   const [showMilestoneDetail, setShowMilestoneDetail] = useState(false);
-  const [showShareToast, setShowShareToast] = useState(false);
   
   const [heritageInsight, setHeritageInsight] = useState<string | null>(null);
 
@@ -72,6 +71,12 @@ const FeedScreen: React.FC = () => {
   }, []);
 
   const fetchHeritageInsight = async () => {
+    // Safety check for API key to prevent black screen/crash on Vercel if missing
+    if (!process.env.API_KEY) {
+      setHeritageInsight("On this day in 1924, the Shtepy heritage was formally enshrined in the archives of Bavaria.");
+      return;
+    }
+
     try {
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       const prompt = "Generate a one-sentence high-end 'On This Day' family heritage fact for a fictional luxury lineage called the 'Shtepy' family. Focus on elegance, tradition, or a major historical event in the year 1924.";
@@ -97,10 +102,10 @@ const FeedScreen: React.FC = () => {
   return (
     <div className="relative h-screen bg-black overflow-hidden">
       {/* Top Overlays - Safe area and Notch management */}
-      <div className="absolute top-0 left-0 right-0 z-30 px-4 sm:px-6 pointer-events-none" style={{ paddingTop: 'calc(var(--safe-top) + 1.5rem)' }}>
+      <div className="absolute top-0 left-0 right-0 z-30 px-4 sm:px-6 pointer-events-none" style={{ paddingTop: 'calc(var(--safe-top) + 1rem)' }}>
         
         {/* Story Bar */}
-        <div className="flex items-center gap-3 sm:gap-4 overflow-x-auto no-scrollbar pb-6 pointer-events-auto">
+        <div className="flex items-center gap-3 sm:gap-4 overflow-x-auto no-scrollbar pb-4 pointer-events-auto">
           <div className="flex flex-col items-center gap-1.5 shrink-0">
              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-dashed border-white/20 flex items-center justify-center bg-white/5 active:scale-95 transition-transform cursor-pointer">
                 <span className="text-xl font-light text-white/40">+</span>
@@ -132,29 +137,40 @@ const FeedScreen: React.FC = () => {
           ))}
         </div>
 
-        {/* AI Heritage Widget - Fixed responsiveness for long messages + Close Button */}
+        {/* REFACTORED: AI Heritage Widget - Fully Responsive & Non-Clipping */}
         <AnimatePresence>
           {heritageInsight && (
             <motion.div 
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="mb-3 pointer-events-auto max-w-[95%] sm:max-w-[80%]"
+              className="mb-4 pointer-events-auto w-full max-w-[calc(100vw-2rem)] sm:max-w-xl"
             >
-              <div className="flex items-start gap-3 px-4 py-3 bg-purple-950/50 border border-purple-500/20 rounded-2xl sm:rounded-3xl backdrop-blur-3xl shadow-2xl relative overflow-hidden group">
-                 {/* Decorative background pulse */}
-                 <div className="absolute top-0 right-0 w-24 h-24 bg-purple-500/5 blur-3xl pointer-events-none" />
+              <div className="flex items-start gap-3 p-3.5 sm:p-4.5 bg-gradient-to-br from-purple-950/60 to-black/40 border border-purple-500/30 rounded-2xl sm:rounded-3xl backdrop-blur-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.7)] relative overflow-hidden">
+                 {/* Luxury Glow Effect */}
+                 <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 blur-[40px] pointer-events-none" />
                  
-                 <Sparkles size={14} className="text-purple-400 shrink-0 mt-0.5" />
-                 <span className="flex-1 text-[10px] sm:text-[11px] font-medium text-purple-100/95 italic leading-relaxed pr-6">
-                   {heritageInsight}
-                 </span>
+                 <div className="shrink-0 mt-0.5">
+                    <div className="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center border border-purple-400/30 shadow-inner">
+                        <Sparkles size={14} className="text-purple-300" />
+                    </div>
+                 </div>
+                 
+                 <div className="flex-1 pr-6 overflow-hidden">
+                    <p className="text-[10.5px] sm:text-[12px] font-medium text-purple-100/90 italic leading-relaxed break-words">
+                      {heritageInsight}
+                    </p>
+                    <div className="mt-1 flex items-center gap-2 opacity-30">
+                        <div className="h-[1px] w-4 bg-purple-400" />
+                        <span className="text-[7px] font-black uppercase tracking-[0.3em] text-purple-400">On this day</span>
+                    </div>
+                 </div>
                  
                  <button 
                   onClick={() => setHeritageInsight(null)}
-                  className="absolute top-2 right-2 p-1.5 text-white/20 hover:text-white/60 transition-colors rounded-full hover:bg-white/5"
+                  className="absolute top-2.5 right-2.5 p-1.5 text-white/20 hover:text-white/60 transition-colors rounded-full hover:bg-white/5 active:scale-90"
                  >
-                    <X size={12} strokeWidth={2} />
+                    <X size={14} strokeWidth={2.5} />
                  </button>
               </div>
             </motion.div>
@@ -165,14 +181,14 @@ const FeedScreen: React.FC = () => {
         <motion.div 
           initial={{ y: -5, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="pointer-events-auto max-w-sm"
+          className="pointer-events-auto w-full max-w-sm"
         >
            <div 
             onClick={() => setShowMilestoneDetail(true)}
-            className="group bg-white/[0.03] backdrop-blur-2xl border border-white/10 rounded-2xl sm:rounded-3xl p-3.5 flex items-center justify-between shadow-2xl active:scale-[0.98] transition-all hover:bg-white/[0.07]"
+            className="group bg-white/[0.04] backdrop-blur-3xl border border-white/10 rounded-2xl sm:rounded-3xl p-3.5 flex items-center justify-between shadow-2xl active:scale-[0.98] transition-all hover:bg-white/[0.08]"
            >
-              <div className="flex items-center gap-3.5">
-                 <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-yellow-500/10 flex items-center justify-center border border-yellow-500/20">
+              <div className="flex items-center gap-3.5 overflow-hidden">
+                 <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-yellow-500/10 flex items-center justify-center border border-yellow-500/20 shrink-0">
                     <Calendar size={16} color={COLORS.PREMIUM} strokeWidth={STROKE_WIDTH} />
                  </div>
                  <div className="overflow-hidden">
@@ -180,7 +196,7 @@ const FeedScreen: React.FC = () => {
                     <p className="text-xs sm:text-sm font-bold text-white tracking-tight truncate">Arthur's 90th Jubilee</p>
                  </div>
               </div>
-              <ChevronRight size={14} className="text-white/20 ml-2" strokeWidth={STROKE_WIDTH} />
+              <ChevronRight size={14} className="text-white/20 ml-2 shrink-0" strokeWidth={STROKE_WIDTH} />
            </div>
         </motion.div>
       </div>
