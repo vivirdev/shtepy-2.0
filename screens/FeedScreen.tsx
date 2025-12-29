@@ -63,7 +63,7 @@ const FeedScreen: React.FC = () => {
   const [commentText, setCommentText] = useState('');
   const [comments, setComments] = useState(INITIAL_COMMENTS);
   const [showMilestoneDetail, setShowMilestoneDetail] = useState(false);
-  
+
   const [heritageInsight, setHeritageInsight] = useState<string | null>(null);
 
   useEffect(() => {
@@ -103,24 +103,35 @@ const FeedScreen: React.FC = () => {
     <div className="relative h-screen bg-black overflow-hidden">
       {/* Top Overlays - Safe area and Notch management */}
       <div className="absolute top-0 left-0 right-0 z-30 px-4 sm:px-6 pointer-events-none" style={{ paddingTop: 'calc(var(--safe-top) + 1rem)' }}>
-        
+
+        {/* Centered Logo */}
+        <div className="flex justify-center mb-6">
+          <motion.img
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            src="/assets/logo.png"
+            alt="Shtepy Logo"
+            className="h-6 sm:h-8 w-auto object-contain opacity-80"
+          />
+        </div>
+
         {/* Story Bar */}
         <div className="flex items-center gap-3 sm:gap-4 overflow-x-auto no-scrollbar pb-4 pointer-events-auto">
           <div className="flex flex-col items-center gap-1.5 shrink-0">
-             <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-dashed border-white/20 flex items-center justify-center bg-white/5 active:scale-95 transition-transform cursor-pointer">
-                <span className="text-xl font-light text-white/40">+</span>
-             </div>
-             <span className="text-[8px] sm:text-[9px] font-black text-white/30 uppercase tracking-widest">Post</span>
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-dashed border-white/20 flex items-center justify-center bg-white/5 active:scale-95 transition-transform cursor-pointer">
+              <span className="text-xl font-light text-white/40">+</span>
+            </div>
+            <span className="text-[8px] sm:text-[9px] font-black text-white/30 uppercase tracking-widest">Post</span>
           </div>
           {STORIES.map((story) => (
-            <motion.div 
-              key={story.name} 
+            <motion.div
+              key={story.name}
               whileTap={{ scale: 0.9 }}
               onClick={() => setActiveStoryMember(story.name)}
               className="flex flex-col items-center gap-1.5 shrink-0 cursor-pointer"
             >
               <div className="relative w-14 h-14 sm:w-16 sm:h-16">
-                <motion.div 
+                <motion.div
                   className="absolute inset-0 rounded-full border-2"
                   style={{ borderColor: story.active ? story.color : 'rgba(255,255,255,0.1)' }}
                   animate={story.active ? { rotate: 360 } : {}}
@@ -140,91 +151,91 @@ const FeedScreen: React.FC = () => {
         {/* REFACTORED: AI Heritage Widget - Fully Responsive & Non-Clipping */}
         <AnimatePresence>
           {heritageInsight && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
               className="mb-4 pointer-events-auto w-full max-w-[calc(100vw-2rem)] sm:max-w-xl"
             >
               <div className="flex items-start gap-3 p-3.5 sm:p-4.5 bg-gradient-to-br from-purple-950/60 to-black/40 border border-purple-500/30 rounded-2xl sm:rounded-3xl backdrop-blur-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.7)] relative overflow-hidden">
-                 {/* Luxury Glow Effect */}
-                 <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 blur-[40px] pointer-events-none" />
-                 
-                 <div className="shrink-0 mt-0.5">
-                    <div className="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center border border-purple-400/30 shadow-inner">
-                        <Sparkles size={14} className="text-purple-300" />
-                    </div>
-                 </div>
-                 
-                 <div className="flex-1 pr-6 overflow-hidden">
-                    <p className="text-[10.5px] sm:text-[12px] font-medium text-purple-100/90 italic leading-relaxed break-words">
-                      {heritageInsight}
-                    </p>
-                    <div className="mt-1 flex items-center gap-2 opacity-30">
-                        <div className="h-[1px] w-4 bg-purple-400" />
-                        <span className="text-[7px] font-black uppercase tracking-[0.3em] text-purple-400">On this day</span>
-                    </div>
-                 </div>
-                 
-                 <button 
+                {/* Luxury Glow Effect */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 blur-[40px] pointer-events-none" />
+
+                <div className="shrink-0 mt-0.5">
+                  <div className="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center border border-purple-400/30 shadow-inner">
+                    <Sparkles size={14} className="text-purple-300" />
+                  </div>
+                </div>
+
+                <div className="flex-1 pr-6 overflow-hidden">
+                  <p className="text-[10.5px] sm:text-[12px] font-medium text-purple-100/90 italic leading-relaxed break-words">
+                    {heritageInsight}
+                  </p>
+                  <div className="mt-1 flex items-center gap-2 opacity-30">
+                    <div className="h-[1px] w-4 bg-purple-400" />
+                    <span className="text-[7px] font-black uppercase tracking-[0.3em] text-purple-400">On this day</span>
+                  </div>
+                </div>
+
+                <button
                   onClick={() => setHeritageInsight(null)}
                   className="absolute top-2.5 right-2.5 p-1.5 text-white/20 hover:text-white/60 transition-colors rounded-full hover:bg-white/5 active:scale-90"
-                 >
-                    <X size={14} strokeWidth={2.5} />
-                 </button>
+                >
+                  <X size={14} strokeWidth={2.5} />
+                </button>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
 
         {/* Milestone Widget - Responsive sizing */}
-        <motion.div 
+        <motion.div
           initial={{ y: -5, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           className="pointer-events-auto w-full max-w-sm"
         >
-           <div 
+          <div
             onClick={() => setShowMilestoneDetail(true)}
             className="group bg-white/[0.04] backdrop-blur-3xl border border-white/10 rounded-2xl sm:rounded-3xl p-3.5 flex items-center justify-between shadow-2xl active:scale-[0.98] transition-all hover:bg-white/[0.08]"
-           >
-              <div className="flex items-center gap-3.5 overflow-hidden">
-                 <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-yellow-500/10 flex items-center justify-center border border-yellow-500/20 shrink-0">
-                    <Calendar size={16} color={COLORS.PREMIUM} strokeWidth={STROKE_WIDTH} />
-                 </div>
-                 <div className="overflow-hidden">
-                    <p className="text-[8px] font-black uppercase tracking-[0.2em] text-yellow-500/70 leading-none mb-1">Upcoming Event</p>
-                    <p className="text-xs sm:text-sm font-bold text-white tracking-tight truncate">Arthur's 90th Jubilee</p>
-                 </div>
+          >
+            <div className="flex items-center gap-3.5 overflow-hidden">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-yellow-500/10 flex items-center justify-center border border-yellow-500/20 shrink-0">
+                <Calendar size={16} color={COLORS.PREMIUM} strokeWidth={STROKE_WIDTH} />
               </div>
-              <ChevronRight size={14} className="text-white/20 ml-2 shrink-0" strokeWidth={STROKE_WIDTH} />
-           </div>
+              <div className="overflow-hidden">
+                <p className="text-[8px] font-black uppercase tracking-[0.2em] text-yellow-500/70 leading-none mb-1">Upcoming Event</p>
+                <p className="text-xs sm:text-sm font-bold text-white tracking-tight truncate">Arthur's 90th Jubilee</p>
+              </div>
+            </div>
+            <ChevronRight size={14} className="text-white/20 ml-2 shrink-0" strokeWidth={STROKE_WIDTH} />
+          </div>
         </motion.div>
       </div>
 
       {/* Main Snap Feed */}
       <div className="snap-container w-full h-full no-scrollbar">
         {MOCK_MEMORIES.map((memory) => (
-          <FeedItem 
-            key={memory.id} 
-            memory={memory} 
-            onCommentClick={() => setShowComments(true)} 
+          <FeedItem
+            key={memory.id}
+            memory={memory}
+            onCommentClick={() => setShowComments(true)}
           />
         ))}
       </div>
 
       {/* MODALS - Responsively scaled */}
-      
+
       {/* 1. Full Screen Story Viewer */}
       <AnimatePresence>
         {activeStoryMember && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[100] bg-black"
           >
             <div className="absolute top-0 left-0 right-0 h-1 bg-white/10 z-20" style={{ marginTop: 'var(--safe-top)' }}>
-              <motion.div 
+              <motion.div
                 className="h-full bg-white"
                 initial={{ width: "0%" }}
                 animate={{ width: "100%" }}
@@ -232,7 +243,7 @@ const FeedScreen: React.FC = () => {
                 onAnimationComplete={() => setActiveStoryMember(null)}
               />
             </div>
-            
+
             <div className="absolute top-6 left-6 right-6 flex justify-between items-center z-20" style={{ marginTop: 'var(--safe-top)' }}>
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-full border border-white/20 overflow-hidden">
@@ -248,17 +259,17 @@ const FeedScreen: React.FC = () => {
               </button>
             </div>
 
-            <img 
-              src={`https://images.unsplash.com/photo-1516738901171-8eb4fc13bd20?auto=format&fit=crop&q=80&w=1000`} 
-              className="w-full h-full object-cover" 
+            <img
+              src={`https://images.unsplash.com/photo-1516738901171-8eb4fc13bd20?auto=format&fit=crop&q=80&w=1000`}
+              className="w-full h-full object-cover"
             />
-            
+
             <div className="absolute bottom-12 left-6 right-6 z-20">
-               <div className="p-5 sm:p-7 bg-black/40 backdrop-blur-2xl border border-white/10 rounded-[2rem] shadow-2xl">
-                  <p className="text-sm sm:text-base font-medium text-white/90 leading-relaxed italic">
-                    "Every heirloom carries a piece of the soul that once held it."
-                  </p>
-               </div>
+              <div className="p-5 sm:p-7 bg-black/40 backdrop-blur-2xl border border-white/10 rounded-[2rem] shadow-2xl">
+                <p className="text-sm sm:text-base font-medium text-white/90 leading-relaxed italic">
+                  "Every heirloom carries a piece of the soul that once held it."
+                </p>
+              </div>
             </div>
           </motion.div>
         )}
@@ -267,48 +278,48 @@ const FeedScreen: React.FC = () => {
       {/* 2. Milestone Detail */}
       <AnimatePresence>
         {showMilestoneDetail && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-black/95 backdrop-blur-xl"
           >
-             <div className="absolute inset-0" onClick={() => setShowMilestoneDetail(false)} />
-             <motion.div 
-               initial={{ scale: 0.9, y: 20 }}
-               animate={{ scale: 1, y: 0 }}
-               className="relative w-full max-w-sm bg-[#252329] border border-white/10 p-8 sm:p-10 rounded-[3rem] shadow-2xl overflow-hidden"
-             >
-                <button onClick={() => setShowMilestoneDetail(false)} className="absolute top-6 right-6 text-white/20 hover:text-white transition-colors">
-                  <X size={20} />
-                </button>
+            <div className="absolute inset-0" onClick={() => setShowMilestoneDetail(false)} />
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              className="relative w-full max-w-sm bg-[#252329] border border-white/10 p-8 sm:p-10 rounded-[3rem] shadow-2xl overflow-hidden"
+            >
+              <button onClick={() => setShowMilestoneDetail(false)} className="absolute top-6 right-6 text-white/20 hover:text-white transition-colors">
+                <X size={20} />
+              </button>
 
-                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-yellow-500/10 rounded-[1.8rem] flex items-center justify-center border border-yellow-500/20 mb-6">
-                   <Calendar size={28} color={COLORS.PREMIUM} strokeWidth={STROKE_WIDTH} />
+              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-yellow-500/10 rounded-[1.8rem] flex items-center justify-center border border-yellow-500/20 mb-6">
+                <Calendar size={28} color={COLORS.PREMIUM} strokeWidth={STROKE_WIDTH} />
+              </div>
+
+              <h3 className="text-2xl sm:text-3xl font-bold tracking-tight mb-1.5 text-white">Arthur's Jubilee</h3>
+              <p className="text-[9px] text-yellow-500 font-black uppercase tracking-[0.2em] mb-8">Exclusive Family Event</p>
+
+              <div className="space-y-5 mb-10 text-white/80">
+                <div className="flex items-center gap-4">
+                  <Clock size={16} className="text-white/30" />
+                  <span className="text-xs font-bold">Sep 12, 2024 • 19:00</span>
                 </div>
-
-                <h3 className="text-2xl sm:text-3xl font-bold tracking-tight mb-1.5 text-white">Arthur's Jubilee</h3>
-                <p className="text-[9px] text-yellow-500 font-black uppercase tracking-[0.2em] mb-8">Exclusive Family Event</p>
-                
-                <div className="space-y-5 mb-10 text-white/80">
-                   <div className="flex items-center gap-4">
-                      <Clock size={16} className="text-white/30" />
-                      <span className="text-xs font-bold">Sep 12, 2024 • 19:00</span>
-                   </div>
-                   <div className="flex items-center gap-4">
-                      <MapPin size={16} className="text-white/30" />
-                      <span className="text-xs font-bold">The Bavarian Estate, Munich</span>
-                   </div>
-                   <div className="flex items-center gap-4">
-                      <Users size={16} className="text-white/30" />
-                      <span className="text-xs font-bold">All Bloodlines Invited</span>
-                   </div>
+                <div className="flex items-center gap-4">
+                  <MapPin size={16} className="text-white/30" />
+                  <span className="text-xs font-bold">The Bavarian Estate, Munich</span>
                 </div>
+                <div className="flex items-center gap-4">
+                  <Users size={16} className="text-white/30" />
+                  <span className="text-xs font-bold">All Bloodlines Invited</span>
+                </div>
+              </div>
 
-                <button className="w-full h-14 rounded-2xl bg-white text-black font-black text-[10px] uppercase tracking-widest shadow-2xl active:scale-[0.97] transition-all">
-                  RSVP Attendance
-                </button>
-             </motion.div>
+              <button className="w-full h-14 rounded-2xl bg-white text-black font-black text-[10px] uppercase tracking-widest shadow-2xl active:scale-[0.97] transition-all">
+                RSVP Attendance
+              </button>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -317,14 +328,14 @@ const FeedScreen: React.FC = () => {
       <AnimatePresence>
         {showComments && (
           <>
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowComments(false)}
               className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[120]"
             />
-            <motion.div 
+            <motion.div
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
@@ -333,8 +344,8 @@ const FeedScreen: React.FC = () => {
             >
               <div className="w-10 h-1.5 bg-white/10 rounded-full mx-auto mt-4 mb-6 shrink-0" />
               <div className="px-8 pb-5 flex justify-between items-center border-b border-white/5 shrink-0">
-                 <h3 className="text-xl font-bold tracking-tight text-white">Heritage Chat</h3>
-                 <span className="text-[9px] font-black text-teal-400 uppercase tracking-widest">{comments.length} Notes</span>
+                <h3 className="text-xl font-bold tracking-tight text-white">Heritage Chat</h3>
+                <span className="text-[9px] font-black text-teal-400 uppercase tracking-widest">{comments.length} Notes</span>
               </div>
               <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6 no-scrollbar">
                 {comments.map((comment) => (
@@ -354,15 +365,15 @@ const FeedScreen: React.FC = () => {
               </div>
               <div className="p-6 pb-10 bg-[#1A1918] border-t border-white/5 shrink-0" style={{ paddingBottom: 'calc(var(--safe-bottom) + 1.5rem)' }}>
                 <div className="relative">
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={commentText}
                     onChange={(e) => setCommentText(e.target.value)}
                     placeholder="Contribute to history..."
                     className="w-full h-14 bg-white/5 rounded-2xl pl-6 pr-14 outline-none border border-white/10 text-xs sm:text-sm font-medium focus:border-purple-500/40 transition-all text-white"
                   />
                   <button onClick={handleAddComment} className="absolute right-2.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-xl flex items-center justify-center text-white active:scale-90 transition-transform shadow-lg"
-                          style={{ backgroundColor: COLORS.PRIMARY }}>
+                    style={{ backgroundColor: COLORS.PRIMARY }}>
                     <Send size={16} strokeWidth={STROKE_WIDTH} />
                   </button>
                 </div>
