@@ -1,0 +1,7 @@
+{
+  "name": "Shtepy - Luxury Family Legacy",
+  "description": "A high-end, dark-themed social archive for preserving family memories with a TikTok-style immersive feed and a premium visual vault.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
